@@ -1,0 +1,58 @@
+[
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this site"
+  },
+  {
+    "objectID": "philosophy/index.html",
+    "href": "philosophy/index.html",
+    "title": "Philosophy",
+    "section": "",
+    "text": "I write about philosophy because I believe the pursuit of knowledge, including philosophical knowledge, is the key to human progress and flourishing. By rigorously questioning our assumptions, carefully analyzing arguments, and seeking to uncover objective truths, we can expand the reach of human understanding and solve profound problems facing humanity. Philosophical inquiry is not a mere academic exercise, but a vital tool for improving the human condition and building a better future.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTruths, Models, and Usefulness\n\n\n\n\n\n\n\n\n\n\n\n3/24/25\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "finance/posts/quantum_short.html",
+    "href": "finance/posts/quantum_short.html",
+    "title": "Quantum Computing Shorts",
+    "section": "",
+    "text": "The Big Blowup\nI started shorting quantum computing stocks toward the end of 2024, and over the past few months I’ve learned a lot about risk management and position sizing. I wanted to share my thoughts on the matter.\nI got fairly lucky in picking a good stock in palantir (PLTR), so I had a good amount of capital to work with. I felt very confident that the quantum stocks like IONQ and Rigetti (RGTI) were worth at least 1/4th of their traded market cap. I wanted to short IONQ to 2 Billion market cap (9$ share price), and RGTI to 1 Billion market cap (3.5$ share price).\nWith a ~1 million dollar account, I ended up shorting up to ~3 million dollars worth of IONQ and RGTI and ended up blowing out most of my gains. In a single day (3/14/2025) I lost 607k and ended up down to ~300k and being forced to cover. It was certainly a lesson in risk management and position sizing. I got extemely over confident in my analysis and ended up losing a lot of money for what I am used to.\n\n\n\nThe big blowup\n\n\n\n\nPast 3 Months\nI had a few things going through my head that day, obviously one was the saying “The market can stay irrational longer than you can stay solvent”, and the other was the idea of just flying to close to the sun. The craziest part of this is that I went through this just a few weeks earlier and told myself that I would cool it a bit next time.\n\n\n\n3 Month View\n\n\nThe graph above shows a spike and crash at the beginning of the year, and I was able to climb back out of the hole, and a few days before the big blowup I started leveraging up again, expecting the short to keep working. In reality, I should have taken at least a few chips off the table, instead of adding more.\n\n\n\nPeak 1/13/2025\n\n\n\n\n\nPeak 3/10/2025\n\n\nAs you may notice, in order to get to the second peak, I took on much more leverage and really should have started deleveraging much more than I did. I also should not have started adding more once it started to go back up throughout that week leading up to the big blowup.\n\n\nLessons Learned\nRisk management needs to be a priority and I should have either:\n\nPosition sized at 5-10% of account\nUsed a stop loss or trailing stop\n\nMany times executing these trades I was too impatient and essentially FOMOing into too much leverage and not taking enough profits.\nSince I am kind of doing a long/short strategy, with PLTR being the long, I should do something like the following: Assume I have a target price of 60$ for PLTR, 3.5$ (1B market cap) for RGTI, and 9$ (2B market cap) for IONQ.\n\nIf PLTR gets down to 60$ then I want to start going long PLTR, and likely cover my short RGTI and IONQ positions.\nUse a formula to calculate how much I should be short RGTI or IONQ based on the price of PLTR.\n\nUntil PLTR gets down to 60$ I want to short RGTI and IONQ for hedging. I would exit if the ratio of RGTI to PLTR gets too low. Using the chart below I want to target .04-.06 of RGTI/PLTR. \n\nimport pandas as pd\nimport numpy as np\nimport plotly.express as px\nimport plotly.io as pio\n\n# Set default renderer for Quarto\npio.renderers.default = \"notebook\"\n\n\n# Generate correlated price scenarios\nnp.random.seed(42)  # For reproducibility\nn_scenarios = 42\n\n# Base prices\npltr_prices = np.random.uniform(60, 100, n_scenarios)\nbase_noise = np.random.normal(0, 3, n_scenarios)\n\n# Add correlation but with some independent noise\nrgti_prices = 3 + (pltr_prices - 60) * 0.3 + base_noise \\\n    * 2 + np.random.normal(0, 1, n_scenarios)\nionq_prices = 6 + (pltr_prices - 60) * 0.5 + base_noise \\\n    * 3 + np.random.normal(0, 1, n_scenarios)\n\n# Ensure prices stay within bounds\nrgti_prices = np.clip(rgti_prices, 3, 20)\nionq_prices = np.clip(ionq_prices, 6, 50)\n\n# Create DataFrame\nscenarios_df = pd.DataFrame({\n    'PLTR': pltr_prices.round(2),\n    'RGTI': rgti_prices.round(2),\n    'IONQ': ionq_prices.round(2),\n    'RGTI/PLTR': (rgti_prices/pltr_prices).round(4),\n    'IONQ/RGTI': (ionq_prices/rgti_prices).round(2)\n})\n\n# Sort by PLTR price for better readability\nscenarios_df.sort_values('PLTR', inplace=True)\n\nscenarios_df['Leverage'] = 2**((scenarios_df['RGTI/PLTR'] - 0.06)/0.12)\nscenarios_df['Short Value'] = scenarios_df['PLTR'] * scenarios_df['Leverage'] * 10_000\n\n\n# Create the plot\nfig = px.scatter(scenarios_df, \n                 x='RGTI/PLTR', \n                 y='Leverage',\n                 title='Leverage vs RGTI/PLTR Ratio',\n                 hover_data={\n                     'PLTR': True,\n                     'RGTI': True,\n                     'IONQ': True,\n                     'Short Value': ':$,.0f',  # Format as currency with commas and no decimals\n                     'RGTI/PLTR': True,\n                     'Leverage': True\n                 })\n\n# Add horizontal line at leverage = 1\nfig.add_hline(y=1, line_dash=\"dash\", line_color=\"gray\", opacity=0.5)\n\n# Add vertical line at ratio = 0.06\nfig.add_vline(x=0.06, line_dash=\"dash\", line_color=\"gray\", opacity=0.5)\n\n# Update layout with dark theme\nfig.update_layout(\n    showlegend=False,\n    yaxis_range=[0, 4],\n    xaxis_range=[0.02, 0.3],\n    plot_bgcolor='rgb(17, 17, 17)',  # Dark background\n    paper_bgcolor='rgb(17, 17, 17)',  # Dark background for the entire plot\n    font=dict(color='white'),  # White text\n    title=dict(font=dict(color='white')),  # White title\n    yaxis=dict(\n        gridcolor='rgba(128, 128, 128, 0.2)',  # Subtle grid lines\n        zerolinecolor='rgba(128, 128, 128, 0.2)',\n        color='white'  # White axis labels\n    ),\n    xaxis=dict(\n        gridcolor='rgba(128, 128, 128, 0.2)',  # Subtle grid lines\n        zerolinecolor='rgba(128, 128, 128, 0.2)',\n        color='white'  # White axis labels\n    )\n)\n\n# Update marker properties\nfig.update_traces(marker=dict(size=8, color='#00ffff'))  # Cyan dots\n\nfig.show()\n\n                                                \n\n\nThis would keep my risk much more in line with what I would want. It is still high risk for most people, but I felt like it is and was a great opportunity. While I highlighted previous quotes about risk management and position sizing, I still rather try and make a lot of money than play it safe, I have a pretty safe job. Like Soros said during the famous 1992 sterling crisis “That’s not enough. What’s the point of taking a position like that if you’re not going to make it big? This is a once-in-a-lifetime opportunity—double it.” when Druckenmiller was already in at 100%. And they were playing with much larger numbers then I am.\n\n\nFuture\nSo am I going to reduce my leverage and play it safe? Nah, fuck it, I am still going to be heavily leveraged (2x atm), but I will be a little more careful and make sure I take profits along the way to try and get down to a 1x leverage and be equal long/short. I will make sure that a 30% up day doesn’t put me into 3 million short at least. I will do that by either reducing leverage, or by picking up more hedged calls so that I don’t end up highly levered with -1 delta, maybe try to get closer to -0.5 to -0.75 delta by Thursday/Friday."
+  },
+  {
+    "objectID": "technical/posts/datasets.html",
+    "href": "technical/posts/datasets.html",
+    "title": "Consistently Updated Datasets",
+    "section": "",
+    "text": "Datasets that are constantly updated\n\nnp.arange(10)\n\narray([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])"
+  },
+  {
+    "objectID": "technical/index.html",
+    "href": "technical/index.html",
+    "title": "Technical",
+    "section": "",
+    "text": "Thoughts on the data, tools, algorithms, and technologies shaping data science and AI.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nConsistently Updated Datasets\n\n\n\n\n\n\n\n\n\n\n\n3/23/25\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "finance/index.html",
+    "href": "finance/index.html",
+    "title": "Finance & Economics",
+    "section": "",
+    "text": "Mostly personal experiences and thoughts on finance and economics.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nQuantum Computing Shorts\n\n\n\n\n\n\n\n\n\n\n\n3/17/25\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Greg",
+    "section": "",
+    "text": "Hi, I’m Greg Harvey, a data scientist at an electric and water utility with 5+ years of experience analyzing data to help make better decisions. I’m interested in AI, machine learning, finance, economics and philosophy, particularly epistemology and critical rationalism, as explored by thinkers like David Deutsch, Naval Ravikant and Brett Hall.\n\n\n\nBelow is a curated collection of blog posts on Philosophy, Finance & Economics, and Technical topics.\n\n\n\n\n\n\n\n\n\nDate\n\n\nModified\n\n\nTitle\n\n\n\n\n\n\n \n\n\n3/24/25\n\n\n \n\n\n\n\n \n\n\n3/24/25\n\n\n \n\n\n\n\n3/24/25\n\n\n3/24/25\n\n\nTruths, Models, and Usefulness\n\n\n\n\n3/23/25\n\n\n3/22/25\n\n\nConsistently Updated Datasets\n\n\n\n\n3/17/25\n\n\n3/22/25\n\n\nQuantum Computing Shorts\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "philosophy/posts/truths_models_usefulness.html",
+    "href": "philosophy/posts/truths_models_usefulness.html",
+    "title": "Truths, Models, and Usefulness",
+    "section": "",
+    "text": "What is a truth?"
+  }
+]

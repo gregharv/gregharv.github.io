@@ -1,0 +1,9 @@
+/* css styles */
+.profile-pic {
+  border-radius: 50%;
+}
+
+:root {
+    --quarto-dark-code-bg: #444242; /* Background color variable */
+    --quarto-light-code-bg: #ece5e5;
+}

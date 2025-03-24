@@ -1,0 +1,28 @@
+[
+  {
+    "listing": "/philosophy/index.html",
+    "items": [
+      "/philosophy/posts/truths_models_usefulness.html"
+    ]
+  },
+  {
+    "listing": "/technical/index.html",
+    "items": [
+      "/technical/posts/datasets.html"
+    ]
+  },
+  {
+    "listing": "/finance/index.html",
+    "items": [
+      "/finance/posts/quantum_short.html"
+    ]
+  },
+  {
+    "listing": "/index.html",
+    "items": [
+      "/philosophy/posts/truths_models_usefulness.html",
+      "/technical/posts/datasets.html",
+      "/finance/posts/quantum_short.html"
+    ]
+  }
+]

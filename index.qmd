@@ -1,0 +1,20 @@
+---
+listing:
+  date-format: short
+  type: table
+  sort-ui: false
+  filter-ui: false
+  sort: 'date desc'
+  fields: [date, file-modified, title]
+  contents: [technical/posts/*, philosophy/posts/*, finance/posts/*]
+---
+
+::: {layout="[21,79]" .profile-header}
+
+![](images/profile_no_background.png){.profile-pic}
+
+Hi, I'm Greg Harvey, a data scientist at an electric and water utility with 5+ years of experience analyzing data to help make better decisions. I'm interested in AI, machine learning, finance, economics and philosophy, particularly epistemology and critical rationalism, as explored by thinkers like David Deutsch, Naval Ravikant and Brett Hall.
+
+:::
+
+Below is a curated collection of blog posts on [Philosophy](philosophy/index.qmd), [Finance & Economics](finance/index.qmd), and [Technical](technical/index.qmd) topics.

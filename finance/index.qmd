@@ -1,0 +1,12 @@
+---
+title: "Finance & Economics"
+listing:
+  date-format: short
+  # type: table
+  # sort-ui: false
+  # filter-ui: false
+  sort: 'date desc'
+  # fields: [date, title]
+---
+
+Mostly personal experiences and thoughts on finance and economics.

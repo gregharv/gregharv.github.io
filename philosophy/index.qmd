@@ -1,0 +1,12 @@
+---
+title: "Philosophy"
+listing:
+  date-format: short
+  # type: table
+  # sort-ui: false
+  # filter-ui: false
+  sort: 'date desc'
+  # fields: [date, title]
+---
+
+I write about philosophy because I believe the pursuit of knowledge, including philosophical knowledge, is the key to human progress and flourishing. By rigorously questioning our assumptions, carefully analyzing arguments, and seeking to uncover objective truths, we can expand the reach of human understanding and solve profound problems facing humanity. Philosophical inquiry is not a mere academic exercise, but a vital tool for improving the human condition and building a better future.
